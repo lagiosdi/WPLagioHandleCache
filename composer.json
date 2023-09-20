@@ -5,7 +5,7 @@
     "wordpress",
     "cache"
   ],
-  "description": "A powerful WordPress plugin designed to enhance caching capabilities for improved website performance. Efficiently manage and optimize caching settings, reduce server load, and accelerate page loading speeds. This plugin ensures seamless integration with WordPress, making it an essential tool for anyone looking to optimize their WordPress website's performance."
+  "description": "A powerful WordPress plugin designed to enhance caching capabilities for improved website performance. Efficiently manage and optimize caching settings, reduce server load, and accelerate page loading speeds. This plugin ensures seamless integration with WordPress, making it an essential tool for anyone looking to optimize their WordPress website's performance.",
   "homepage": "https://lagio.co",
   "license": "GPL-2.0",
   "minimum-stability": "stable",
