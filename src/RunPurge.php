@@ -5,6 +5,8 @@ namespace Lagio\HandleCache;
 class RunPurge {
 	use Singleton;
 
+	private static $already_run = null;
+
 	private function __construct() {
 		add_action( 'transition_post_status', [ __CLASS__, 'post_transition_action' ], 10, 3 );
 		add_action( 'lagio_nginx_refresh_cache', [ __CLASS__, 'refresh_nginx_cache' ], 10, 1 );
