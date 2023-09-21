@@ -24,4 +24,10 @@ function wplhc_deactivate() {
 	// Add deactivation tasks here
 }
 
+
+require_once WPLHC_PLUGIN_DIR . 'src/SingletonTrait.php';
+require_once WPLHC_PLUGIN_DIR . 'src/AbstractHandleCache.php';
+require_once WPLHC_PLUGIN_DIR . 'src/HandleNginxCache.php';
+require_once WPLHC_PLUGIN_DIR . 'src/CloudflarePurgeCache.php';
+require_once WPLHC_PLUGIN_DIR . 'src/FacebookDebug.php';
 require_once WPLHC_PLUGIN_DIR . 'src/RunPurge.php';
