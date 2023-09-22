@@ -32,15 +32,15 @@ class RunPurge {
 		}
 	}
 
-	private function scheduleNginxRefresh( $postId, int $delaySeconds = 3 ): void {
+	private static function scheduleNginxRefresh( $postId, int $delaySeconds = 3 ): void {
 		wp_schedule_single_event( time() + $delaySeconds, 'lagio_nginx_refresh_cache', [ $postId ] );
 	}
 
-	private function scheduleCloudflarePurge( int $postId, int $delaySeconds = 3 ): void {
+	private static function scheduleCloudflarePurge( int $postId, int $delaySeconds = 3 ): void {
 		wp_schedule_single_event( time() + $delaySeconds, 'lagio_cloudflare_purge_cache', [ $postId ] );
 	}
 
-	private function scheduleFacebookDebug( $postId, int $delaySeconds = 3 ): void {
+	private static function scheduleFacebookDebug( $postId, int $delaySeconds = 3 ): void {
 		wp_schedule_single_event( time() + $delaySeconds, 'lagio_fb_sharing_debug', [ $postId ] );
 	}
 
