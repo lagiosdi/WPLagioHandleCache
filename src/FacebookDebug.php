@@ -36,7 +36,6 @@ class FacebookDebug extends AbstractHandleCache {
 
 
 		// Set the URL for the Facebook Graph API endpoint
-		$url = 'https://graph.facebook.com/v14.0/';
 
 		foreach ( $this->urls as $url ) {
 			$this->debugUrl( $url );
@@ -45,24 +44,15 @@ class FacebookDebug extends AbstractHandleCache {
 	}
 
 
-	public function debugUrl( $url ): void {
+	public function debugUrl( $link ): void {
 		$app_id     = $this->app_id;
 		$app_secret = $this->app_secret;
 
 		$access_token = $app_id . '|' . $app_secret;
-		$data         = array(
-			'scrape'       => 'true',
-			'id'           => $url,
-			'access_token' => $access_token,
-		);
 
-		// Set the request arguments
-		$args = array(
-			'body' => http_build_query( $data ),
-		);
+		$url = 'https://graph.facebook.com/?id=' . $link . '&scrape=true&access_token=' . $access_token;
+		wp_remote_post( $url );
 
-		// Make the remote POST request
-		wp_remote_post( $url, $args );
 	}
 
 
