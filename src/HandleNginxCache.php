@@ -72,10 +72,12 @@ final class HandleNginxCache extends AbstractHandleCache {
 			'headers' => $headers,
 		);
 
+		add_filter( 'https_ssl_verify', '__return_false' );
 		// Send a GET request to the URL with the custom header
 		if ( is_wp_error( wp_remote_get( $url, $args ) ) ) {
 			return false; // Return false to indicate an error
 		}
+		add_filter( 'https_ssl_verify', '__return_true' );
 
 		return true; // Return true to indicate success
 
