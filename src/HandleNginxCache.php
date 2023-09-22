@@ -55,9 +55,18 @@ final class HandleNginxCache extends AbstractHandleCache {
 	 */
 	public function refreshCacheByUrl( string $url ): mixed {
 		// Add the custom header to refresh the cache
+		// get domain from url
+		$host = parse_url( $url, PHP_URL_HOST );
+		//get server ip
+		$ip_server = $_SERVER['SERVER_ADDR'];
+
 		$headers = array(
 			'X-Refresh-Cache' => '1',
 		);
+		if ( $host ) {
+			$headers['Host'] = $host;
+			$url             = str_replace( $host, $ip_server, $url );
+		}
 
 		$args = array(
 			'headers' => $headers,
