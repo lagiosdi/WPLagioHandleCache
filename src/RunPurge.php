@@ -50,7 +50,7 @@ class RunPurge {
 		                ->setUrlsToRefresh()
 		                ->Refresh();
 
-		self::scheduleCloudflarePurge( $post_id );
+		self::scheduleCloudflarePurge( $post_id, 1 );
 	}
 
 	public static function purge_cloudflare_cache( $post_id ): void {
