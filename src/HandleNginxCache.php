@@ -53,7 +53,7 @@ final class HandleNginxCache extends AbstractHandleCache {
 	 *
 	 * @return mixed|false Response body if successful, or false on error.
 	 */
-	public function refreshCacheByUrl( string $url ): mixed {
+	public function refreshCacheByUrlWithParseUrl( string $url ): mixed {
 		// Add the custom header to refresh the cache
 		// get domain from url
 		$host = parse_url( $url, PHP_URL_HOST );
@@ -78,6 +78,27 @@ final class HandleNginxCache extends AbstractHandleCache {
 			return false; // Return false to indicate an error
 		}
 		add_filter( 'https_ssl_verify', '__return_true' );
+
+		return true; // Return true to indicate success
+
+	}
+
+
+	public function refreshCacheByUrl( string $url ): mixed {
+
+
+		$headers = array(
+			'X-Refresh-Cache' => '1',
+		);
+
+		$args = array(
+			'headers' => $headers,
+		);
+
+		// Send a GET request to the URL with the custom header
+		if ( is_wp_error( wp_remote_get( $url, $args ) ) ) {
+			return false; // Return false to indicate an error
+		}
 
 		return true; // Return true to indicate success
 
