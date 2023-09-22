@@ -28,10 +28,20 @@ class RunPurge {
 
 		$post_id = $post->ID;
 		if ( $post_id ) {
-			wp_schedule_single_event( time() + 3, 'lagio_nginx_refresh_cache', [ $post_id ] );
-			wp_schedule_single_event( time() + 4, 'lagio_cloudflare_purge_cache', [ $post_id ] );
-			wp_schedule_single_event( time() + 7, 'lagio_fb_sharing_debug', [ $post_id ] );
+			self::scheduleNginxRefresh( $post_id );
 		}
+	}
+
+	private function scheduleNginxRefresh( $postId, int $delaySeconds = 3 ): void {
+		wp_schedule_single_event( time() + $delaySeconds, 'lagio_nginx_refresh_cache', [ $postId ] );
+	}
+
+	private function scheduleCloudflarePurge( int $postId, int $delaySeconds = 3 ): void {
+		wp_schedule_single_event( time() + $delaySeconds, 'lagio_cloudflare_purge_cache', [ $postId ] );
+	}
+
+	private function scheduleFacebookDebug( $postId, int $delaySeconds = 3 ): void {
+		wp_schedule_single_event( time() + $delaySeconds, 'lagio_fb_sharing_debug', [ $postId ] );
 	}
 
 	public static function refresh_nginx_cache( $post_id ): void {
@@ -39,6 +49,8 @@ class RunPurge {
 		                ->setPostId( $post_id )
 		                ->setUrlsToRefresh()
 		                ->Refresh();
+
+		self::scheduleCloudflarePurge( $post_id );
 	}
 
 	public static function purge_cloudflare_cache( $post_id ): void {
@@ -46,6 +58,9 @@ class RunPurge {
 		                    ->setPostId( $post_id )
 		                    ->setUrlsToRefresh()
 		                    ->purgeRequest();
+
+		self::scheduleFacebookDebug( $post_id );
+
 	}
 
 	public static function debug_facebook_share( $post_id ): void {
