@@ -34,32 +34,35 @@ class FacebookDebug extends AbstractHandleCache {
 		}
 		$this->urls = array_unique( $this->urls );
 
-		$app_id     = $this->app_id;
-		$app_secret = $this->app_secret;
-
-		$access_token = $app_id . '|' . $app_secret;
 
 		// Set the URL for the Facebook Graph API endpoint
 		$url = 'https://graph.facebook.com/v14.0/';
 
 		foreach ( $this->urls as $url ) {
-			// Set the request body data
-			$data = array(
-				'scrape'       => 'true',
-				'id'           => $url,
-				'access_token' => $access_token,
-			);
-
-			// Set the request arguments
-			$args = array(
-				'body' => http_build_query( $data ),
-			);
-
-			// Make the remote POST request
-			wp_remote_post( $url, $args );
-
+			$this->debugUrl( $url );
 		}
 
+	}
+
+
+	public function debugUrl( $url ): void {
+		$app_id     = $this->app_id;
+		$app_secret = $this->app_secret;
+
+		$access_token = $app_id . '|' . $app_secret;
+		$data         = array(
+			'scrape'       => 'true',
+			'id'           => $url,
+			'access_token' => $access_token,
+		);
+
+		// Set the request arguments
+		$args = array(
+			'body' => http_build_query( $data ),
+		);
+
+		// Make the remote POST request
+		wp_remote_post( $url, $args );
 	}
 
 
