@@ -43,6 +43,11 @@ class CloudflarePurgeCache extends AbstractHandleCache {
 
 
 	function purgeRequest(): void {
+		$transient_name = 'lagio_cloudflare_purge_urls';
+		$transient      = get_transient( $transient_name );
+		if ( $transient ) {
+			return;
+		}
 
 		if ( empty( $this->urls ) ) {
 			return;
@@ -51,10 +56,9 @@ class CloudflarePurgeCache extends AbstractHandleCache {
 		$this->urls = array_unique( $this->urls );
 
 		$api_key = $this->cloudflare_api_key;
-		$email   = $this->cloudflare_email;
 		$zone_id = $this->cloudflare_zone_id;
 
-		if ( ! $api_key || ! $email || ! $zone_id ) {
+		if ( ! $api_key || ! $zone_id ) {
 			return;
 		}
 
@@ -65,22 +69,27 @@ class CloudflarePurgeCache extends AbstractHandleCache {
 
 		foreach ( $url_batches as $batch ) {
 			$headers = array(
-				'Content-Type' => 'application/json',
-				'X-Auth-Email' => $email, // Add X-Auth-Email header
-				'X-Auth-Key'   => $api_key,   // Add X-Auth-Key header
+				'Content-Type'  => 'application/json',
+				'Authorization' => "Bearer " . $api_key,
 			);
 
 			$data = array(
 				'files' => $batch,
 			);
 
-			wp_safe_remote_request( $endpoint, array(
+			$remote = wp_safe_remote_request( $endpoint, array(
 				'method'  => 'DELETE',
 				'headers' => $headers,
 				'body'    => json_encode( $data ),
 				'timeout' => 30, // Adjust as needed
 			) );
 
+			$status_code = wp_remote_retrieve_response_code( $remote );
+
+			if ( $status_code != 200 ) {
+				set_transient( $transient_name, $status_code, 60 * 60 * 1 );
+			}
+			
 		}
 
 	}
